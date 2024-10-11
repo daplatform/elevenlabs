@@ -1,0 +1,94 @@
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-image: url('/static/images/background/background4.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: "Poppins", sans-serif;
+}
+
+.navbar {
+    background-color: rgba(36, 51, 98, 0.8);
+    padding-right: 20px;
+}
+
+.navbar-brand img {
+    height: 40px;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    height: 40%; /* Adjusted height */
+    width: 60%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    position: relative; /* Needed for positioning the record button */
+}
+
+#record-btn {
+    background-color: grey; /* Default grey color */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Make it round */
+    width: 60px; /* Adjust width for round button */
+    height: 60px; /* Adjust height for round button */
+    font-size: 24px; /* Emoji size */
+    position: absolute; /* Absolute positioning */
+    top: 20px; /* Position it at the top */
+    right: 20px; /* Position it at the right */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#record-btn:hover {
+    transform: scale(1.05); /* Scale effect on hover */
+}
+
+.response-button {
+    background: linear-gradient(45deg, #ff6a00, #ee0979);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin: 5px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.response-button:hover {
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.right-container {
+    position: absolute;
+    bottom: 20px; 
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust for centering */
+    display: flex; /* Flexbox for aligning items */
+    align-items: center; /* Center vertically */
+}
+
+#bloopaImage {
+    width: 250px; /* Adjusted size */
+    height: auto; /* Maintain aspect ratio */
+    z-index: 1000;
+}
+
+.comment-box {
+    background: rgba(255, 255, 255, 0.8); /* White background with transparency */
+    border-radius: 15px;
+    padding: 20px;
+    margin-left: 20px; /* Space between image and comment box */
+    max-width: 400px; /* Limit width of comment box */
+}

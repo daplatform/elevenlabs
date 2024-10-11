@@ -1,0 +1,164 @@
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;600&display=swap');
+
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-image: url('/static/images/background/background2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: "Poppins", sans-serif;
+        }
+        .navbar {
+            background-color: rgba(36, 51, 98, 0.8);
+            padding-right: 20px;
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+        .attention-bars {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        .attention-bar {
+            height: 12px;
+            width: 20px;
+            margin-left: 2px;
+            border: 1px solid #000;
+        }
+        .attention-label {
+            color: white;
+            text-align: center;
+            margin-left: 10px;
+        }
+        .logout-button {
+            margin-left: 20px;
+            color: white;
+            background-color: #1b2a5b;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 15px;
+            cursor: pointer;
+        }
+        .logout-button:hover {
+            background-color: #152040;
+        }
+        .content {
+            text-align: center;
+            margin-top: 20px;
+            position: relative;
+            flex-grow: 1; /* Ensure content grows to fill the space */
+            z-index: 1; /* Lower z-index for content */
+        }
+        
+        .glass-circles {
+            position: absolute;
+            width: 100%;
+            bottom: 20px; /* Position circles at the bottom */
+            left: 0;
+            display: flex;
+            justify-content: space-between; /* Space the circles evenly */
+            padding: 0 10%; /* Add some padding to the sides */
+            pointer-events: auto; /* Enable pointer events */
+            z-index: 2; /* Higher z-index for circles */
+        }
+        
+        .circle {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            width: 100px; /* Fixed width */
+            height: 100px; /* Fixed height */
+            display: flex; /* Enable flexbox */
+            align-items: center; /* Center vertically */
+            justify-content: center; /* Center horizontally */
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            overflow: hidden; /* Prevent overflow */
+            text-overflow: ellipsis; /* Optional: show ellipsis for overflow text */
+            cursor: pointer; /* Change cursor to pointer */
+            z-index: 3; /* Higher z-index for individual circles */
+        }
+        #bloopaImage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 8;
+            height: 83%; /* Keep the existing height, adjust as needed */
+            cursor: pointer;
+        }
+        
+        .theme-switcher {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid #243362;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Comment box styles */
+        .comment-box {
+            position: absolute;
+            top: 30%; /* Align with the height of Bloopa */
+            left: calc(50% + 200px); /* Move more to the right */
+            width: 200px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 4; /* Higher z-index to appear above other elements */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Align text to the left */
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            position: absolute;
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%); /* Center adjustment */
+            z-index: 4; /* Higher z-index for glass cards */
+        }
+
+        .left-glass-card {
+            left: 5%; /* Position left card */
+            width: 500px;
+            height: 350px;
+        }
+
+        .right-glass-card {
+            right: 5%; /* Position right card */
+            width: 250px;
+            height: 350px;
+        }
+
+
+
+        .comment-box:before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 100%; /* Positioning for the triangle */
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent rgba(255, 255, 255, 0.8) transparent transparent; /* Triangle pointing towards Bloopa */
+        }

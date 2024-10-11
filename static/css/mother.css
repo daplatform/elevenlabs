@@ -1,0 +1,175 @@
+/* General Body Styles */
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-image: url('/static/images/background/background5.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: rgba(36, 51, 98, 0.8);
+    padding: 10px 20px;
+}
+
+.navbar-brand img {
+    height: 40px;
+}
+
+.attention-bars {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.attention-bar {
+    height: 12px;
+    width: 20px;
+    margin-left: 2px;
+    border: 1px solid #000;
+}
+
+.attention-label {
+    color: white;
+    text-align: center;
+    margin-left: 10px;
+}
+
+/* Content Area Styles */
+.content {
+    display: flex; /* Create a flex container for the content */
+    width: 100%;
+    height: calc(100vh - 80px); /* Adjust height to fill the remaining viewport space */
+}
+
+/* Left Sidebar Styles */
+.left-sidebar {
+    width: 40%; /* 40% width for the left sidebar */
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+}
+
+/* Video Section */
+.video-section {
+    height: 70%; /* Adjust height to 70% to hide the bottom 20% of the video */
+    display: flex;
+    justify-content: center; /* Center the video */
+    align-items: flex-start; /* Align video to the top */
+    position: relative; /* Position relative for absolute children */
+}
+
+#videoPlayer {
+    width: 90%; /* Width of video player */
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* Language Section */
+.language-section {
+    height: 10%; /* 10% height for languages */
+    display: flex; /* Flex layout for languages */
+    justify-content: center; /* Center languages horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.lang-tile {
+    margin: 0 10px; /* Space between language buttons */
+    padding: 10px 20px;
+    background-color: #6c63ff; /* Fancy background color */
+    color: white;
+    border: none;
+    border-radius: 12px; /* Rounded corners */
+    cursor: pointer;
+    z-index:3000;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+}
+
+.lang-tile:hover {
+    transform: translateY(-3px); /* Lift effect on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Right Sidebar Styles */
+.right-sidebar {
+    width: 90%; /* 60% width for the right sidebar */
+    display: flex; /* Use flex for layout */
+}
+
+/* Glass Tile Section */
+.glass-tile {
+    background: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+    backdrop-filter: blur(10px); /* Blurred background */
+    border-radius: 10px; /* Rounded corners */
+    padding: 30px; /* Padding for the tile */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    width: 60%; /* 40% width for glass tile */
+    height: 100%; /* 60% height */
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+}
+
+/* Bloopa Container Styles */
+.bloopa-container {
+    width: 30%; /* 20% width for Bloopa container */
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    align-items: center; /* Center align content */
+    justify-content: flex-start; /* Align items to the top */
+    position: relative; /* Set position relative to contain the content */
+    height: 60%; /* Same height as glass tile */
+}
+
+#bloopaImage {
+    width: 250px; /* Set size for Bloopa image */
+    cursor: pointer;
+    margin-bottom: 10px; /* Space between image and comment box */
+}
+
+.comment-box {
+    width: 90%; /* Width of the comment box */
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    text-align: left; /* Left-align text */
+}
+
+/* Avatar Section Positioned Absolutely */
+.avatar-section {
+    position: absolute; /* Position absolutely within parent */
+    bottom: 10px; /* Position 10px from the bottom */
+    left: 10px; /* Position 10px from the left */
+    display: flex;
+    justify-content: center; /* Center avatars horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.avatar-icon {
+    width: 100px; /* Set size for avatars */
+    height: 100px; /* Keep it circular */
+    border-radius: 50%; /* Circular shape */
+    margin: 0 10px; /* Space between avatars */
+    cursor: pointer;
+    z-index:4000;
+    border: 2px solid #ffffff; /* White border */
+    transition: transform 0.3s; /* Animation on hover */
+}
+
+.avatar-icon:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Adjustments for responsiveness */
+@media (max-width: 768px) {
+    .left-sidebar, .right-sidebar {
+        width: 100%; /* Stack sidebars on smaller screens */
+        height: auto; /* Allow height to be automatic */
+    }
+}

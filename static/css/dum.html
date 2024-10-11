@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="static/js/textToSpeech.js"></script>  <!-- Text-to-speech logic -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/speech.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}" /> <!-- Link to custom CSS -->
+    <style>
+        /* Additional styling if needed */
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Bloopa Logo">
+        </a>
+        <h5 style="color:#fff"> Adaptive AAC |</h5>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main') }}" id="homeButton">🏠 Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('about') }}" id="aboutButton">ℹ️ About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('features') }}">⭐ Features</a>
+                </li>
+            </ul>
+            <div class="attention-bars">
+                <div class="attention-bar" id="bar1"></div>
+                <div class="attention-bar" id="bar2"></div>
+                <div class="attention-bar" id="bar3"></div>
+                <div class="attention-bar" id="bar4"></div>
+                <div class="attention-label">Attention</div>
+                <button class="logout-button" id="sourceCodeButton" onclick="window.location.href='https://github.com/your-repo'">Source Code</button>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="content d-flex">
+        <img id="bloopaImage" src="{{ url_for('static', filename='images/bloopas/7.png') }}" alt="Bloopa Image" style="height:83%; cursor:pointer;">
+
+        <div class="left-glass-card flex-fill">
+            <h5>Audio Avatars</h5>
+            <div class="audio-list">
+                <div id="avatarList" class="d-flex flex-wrap justify-content-center">
+                    {% for i in range(1, 7) %}
+                    <img src="{{ url_for('static', filename='images/avatar/avatar-' ~ i ~ '.jpg') }}"
+                         class="avatar"
+                         onclick="displayAvatarInfo({{ i - 1 }})"
+                         alt="Avatar {{ i }}">
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Updated Right Pane -->
+        <div class="right-glass-card flex-fill">
+            <h5 class="text-center" style="color:#000;">Ask a Question</h5>
+            <div class="form-group">
+                <input type="text" class="form-control fancy-input" id="questionInput" placeholder="Type your question here...">
+            </div>
+            <button class="fancy-btn" onclick="submitQuestion()">Submit</button>
+
+            <!-- Added Section to Display Avatar Info -->
+            <div id="generatedContent" class="mt-3">
+                <h5>Avatar Details</h5>
+                <p id="avatarInfo"></p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="comment-box" id="comment-box">
+        <p>Hello! I'm Gonzo Bloopa! Let me answer your questions, ask me anything ▶️</p>
+    </div>
+
+    <script>
+        // Store avatar details in an array of objects
+        const avatars = [
+            {"name": "Aria", "attributes": "funny, optimistic", "voice_id": "9BWtsMINqrJLrRacOk9x"},
+            {"name": "Roger", "attributes": "shy, curious", "voice_id": "CwhRBWXzGAHq8TQ4Fs17"},
+            {"name": "Sarah", "attributes": "adventurous, playful", "voice_id": "EXAVITQu4vr4xnSDxMaL"},
+            {"name": "Laura", "attributes": "enthusiastic, supportive", "voice_id": "FGY2WhTYpPnrIDTdsKH5"},
+            {"name": "Charlie", "attributes": "thoughtful, kind", "voice_id": "IKne3meq5aSn9XLyUdCD"},
+            {"name": "George", "attributes": "smart, witty", "voice_id": "JBFqnCBsd6RMkjVDRZzb"}
+        ];
+
+        // Function to display avatar information when clicked
+        function displayAvatarInfo(index) {
+            const avatar = avatars[index];
+            const avatarInfo = `Name: ${avatar.name}, Attributes: ${avatar.attributes}, Voice ID: ${avatar.voice_id}`;
+            document.getElementById('avatarInfo').innerText = avatarInfo;
+        }
+
+        function submitQuestion() {
+            const question = document.getElementById('questionInput').value;
+            if (!question) {
+                alert("Please enter a question.");
+                return;
+            }
+
+            // Mock response handling, replace with actual logic
+            const response = `You asked: "${question}". My answer: That's a great question!`;
+            document.getElementById('generatedContent').innerText = response;
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

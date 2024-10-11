@@ -1,0 +1,340 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;600&display=swap');
+
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-image: url('/static/images/background/background4.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: "Poppins", sans-serif;
+}
+
+#story {
+    width: 100%;         /* Make the div take the full width of the parent container */
+    font-size: 1.2em; /* Increase font size */
+    line-height: 1.6; /* Better line spacing */
+    color: #333; /* Dark text color for better readability */
+    padding: 20px; /* Add some padding around the text */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+}
+
+.glass-card {
+    position: relative;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    height: 500px;
+    width: 40%; /* Each card takes 40% */
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: #000;
+    padding: 15px;
+    text-align: center;
+    margin: 0 5%; /* Added margin to create spacing */
+}
+
+#characters {
+    font-size: 1.5em; /* Bigger font for the header */
+    margin-bottom: 10px; /* Space between header and images */
+}
+
+/* CSS for the card container */
+#card-container2 {
+    display: flex; /* Use flexbox layout */
+    flex-direction: row; /* Arrange children in a row */
+    overflow-x: auto; /* Allow horizontal scrolling if needed */
+    gap: 10px; /* Optional: space between images */
+    scrollbar-width: thin; /* Firefox: thin scrollbar */
+    scrollbar-color: rgba(0, 0, 255, 0.5) transparent; /* Firefox: scrollbar color */
+}
+
+/* WebKit browsers (Chrome, Safari) */
+#card-container2::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+    height: 8px; /* Height of the scrollbar */
+}
+
+#card-container2::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 255, 0.5); /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded corners for the thumb */
+}
+
+#card-container2::-webkit-scrollbar-track {
+    background: transparent; /* Color of the scrollbar track */
+}
+
+
+#card-container2 img {
+    width: 100px; /* Set a fixed width for all images */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover; /* Ensure images cover their containers */
+}
+
+
+/* CSS for each card */
+.card {
+    min-width: 150px; /* Minimum width for each card */
+    margin-right: 15px; /* Space between cards */
+    flex-shrink: 0; /* Prevent cards from shrinking */
+    scroll-snap-align: start; /* Optional: snap to start when scrolling */
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+}
+
+/* CSS for the card image */
+.card img {
+    width: 100%; /* Make images responsive */
+    border-radius: 10px; /* Round the corners of the images */
+}
+
+.scrolling-container {
+    display: flex;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    padding: 10px 0; /* Padding on top and bottom */
+    position: relative; /* To position the overlay */
+}
+
+.scrolling-container::before,
+.scrolling-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 30px; /* Width of the transparent bars */
+    z-index: 1; /* Ensure it's above the images */
+}
+
+.scrolling-container::before {
+    left: 0;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.7), transparent); /* Left gradient */
+}
+
+.scrolling-container::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.7), transparent); /* Right gradient */
+}
+
+button {
+    background-color: #007BFF; /* Bootstrap primary color */
+    color: white; /* White text */
+    border: none; /* No border */
+    padding: 10px 20px; /* Padding for the button */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 1em; /* Font size */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+    transform: scale(1.05); /* Slightly increase button size */
+}
+
+button:active {
+    transform: scale(0.95); /* Slightly decrease button size when clicked */
+}
+
+.navbar {
+    background-color: rgba(36, 51, 98, 0.8);
+    padding: 10px 20px;
+}
+
+.navbar-brand img {
+    height: 40px;
+}
+
+.attention-bars {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.attention-bar {
+    height: 12px;
+    width: 20px;
+    margin-left: 2px;
+    border: 1px solid #000;
+}
+
+.attention-label {
+    color: white;
+    text-align: center;
+    margin-left: 10px;
+}
+
+.logout-button {
+    margin-left: 20px;
+    color: white;
+    background-color: #1b2a5b;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background-color: #152040;
+}
+
+.content {
+    display: flex;
+    flex-grow: 1; /* Allow content to grow */
+    padding: 20px;
+}
+.card-img-top {
+    width: 100%; /* Make the image responsive */
+    max-width: 200px; /* Set a maximum width (adjust as needed) */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover; /* Crop the image to fit if necessary */
+}
+
+.card-container {
+    display: flex;
+    justify-content: space-between; /* Space between the cards */
+    width: 80%; /* Allocate 80% width for cards */
+    margin-right: 5px; /* Add space between cards and Bloopa section */
+}
+
+#right-glass-tile {
+    background: rgba(255, 255, 255, 0.2); /* Glass tile effect */
+    border-radius: 10px; /* Rounded corners */
+    padding: 15px; /* Padding inside the glass tile */
+    position: relative; /* Position relative for the pseudo-element */
+    overflow: hidden; /* Hide overflow content */
+}
+
+/* Thin transparent blue bar */
+#right-glass-tile::after {
+    content: ''; /* Empty content for the pseudo-element */
+    position: absolute; /* Position it absolutely */
+    bottom: 0; /* Align it to the bottom */
+    left: 0; /* Align it to the left */
+    width: 100%; /* Full width */
+    height: 2px; /* Height of the bar */
+    background-color: rgba(0, 0, 255, 0.5); /* Transparent blue color */
+    z-index: 1; /* Keep it above other content */
+}
+
+.bloopa-container {
+    width: 20%; /* Allocate 20% width for image and comment */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center align items */
+}
+
+#bloopaImage {
+    width: 100%; /* Responsive width */
+    max-height: 60vh; /* Maintain a max height for the image */
+    cursor: pointer;
+}
+
+.comment-box {
+    width: 100%; /* Full width for comment box */
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative; /* Required for the before pseudo-element */
+}
+
+.comment-box:before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: 100%;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent rgba(255, 255, 255, 0.8) transparent transparent;
+}
+
+.record-button {
+    position: relative;
+    bottom: 20px; 
+    background-color: red;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.record-button:hover {
+    background-color: darkred;
+}
+
+.sample-text {
+    position: absolute;
+    top: 20px; 
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    z-index: 9;
+    text-align: center; /* Center text */
+}
+
+.theme-switcher {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px solid #243362;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+}
+
+.theme-switcher:hover {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.theme-icon {
+    width: 24px;
+    height: 24px;
+}
+
+@media (max-width: 768px) {
+    .glass-card {
+        width: 90%; /* Full width on smaller screens */
+    }
+
+    .content {
+        flex-direction: column; /* Stack content vertically on small screens */
+    }
+
+    .bloopa-container {
+        width: 100%; /* Full width for bloopa section on smaller screens */
+    }
+
+    .scrolling-container {
+        padding: 5px 0; /* Reduce padding on small screens */
+    }
+}
+
