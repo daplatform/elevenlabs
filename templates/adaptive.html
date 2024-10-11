@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Emotion Detection</title>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      /* Styling for the processing animation */
+      .processing-overlay {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+          z-index: 1000;
+          text-align: center;
+          justify-content: center;
+          align-items: center;
+      }
+
+      .processing-overlay.active {
+          display: flex;
+      }
+
+      .spinner {
+          border: 16px solid #f3f3f3; /* Light grey */
+          border-top: 16px solid #3498db; /* Blue */
+          border-radius: 50%;
+          width: 120px;
+          height: 120px;
+          animation: spin 2s linear infinite;
+      }
+
+      @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+      }
+  </style>
+  <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/adaptive.css') }}"
+    />
+    <!-- Link to external CSS -->
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="#">
+        <img
+          src="{{ url_for('static', filename='images/logo.png') }}"
+          alt="Bloopa Logo"
+        />
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('main') }}" id="homeButton"><🏠 Home></a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('about') }}" id="aboutButton"><ℹ️ About></a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('features') }}"><⭐ Features></a>
+          </li>
+      </ul>
+
+        <div class="attention-bars">
+          <div class="attention-bar" id="bar1"></div>
+          <div class="attention-bar" id="bar2"></div>
+          <div class="attention-bar" id="bar3"></div>
+          <div class="attention-bar" id="bar4"></div>
+          <div class="attention-label">Attention</div>
+          <button
+            class="logout-button"
+            id="sourceCodeButton"
+            onclick="window.location.href='https://github.com/your-repo'"
+          >
+            Source Code
+          </button>
+        </div>
+      </div>
+    </nav>
+    <div class="processing-overlay" id="processingOverlay">
+      <div class="spinner"></div>
+  </div>
+
+    <!-- Sample text above the Bloopa image -->
+    <div class="sample-text" id="topic-text"></div>
+
+    <div class="content">
+      <div class="card-container">
+        <!-- Left glass card -->
+        <div class="glass-card" id="left-glass-tile">
+          <p>
+            <table style="width: 100%; border-collapse: collapse; border: none;">
+              <tr style="border: none;">
+                  <td style="border: none; padding: 0;">
+                      <div id="story" class="mb-5"></div>
+                  </td>
+              </tr>
+              <tr style="border: none;">
+                  <td style="border: none; padding: 0;">
+                      <div id="characters" class="mb-5"></div>
+                  </td>
+              </tr>
+          </table>
+                              </p>
+        </div>
+
+        <!-- Right glass card -->
+        <div class="glass-card" id="right-glass-tile">
+
+          <p>
+
+            <div id="card-container2"></div>
+        </p>
+        </div>
+      </div>
+
+      <div class="bloopa-container">
+        <!-- Bloopa image -->
+        <img
+          id="bloopaImage"
+          src="{{ url_for('static', filename='images/bloopas/3.png') }}"
+          alt="Bloopa Logo"
+        />
+
+        <!-- Comment box -->
+        <div class="comment-box" id="comment-box">
+          <p id="typewriter-text"></p> 
+
+          <textarea
+          style="height: 50px; display: none;" 
+          id="gemini-response"
+            placeholder="Response from Gemini will appear here..."
+            readonly
+          ></textarea>
+        </div>
+
+        <!-- Record button below the comment box -->
+        <button id="recordButton" class="record-button">REC</button>
+        <span id="status"></span>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="static/js/textToSpeech.js"></script>  <!-- Text-to-speech logic -->
+    <script>
+      function typeWriterEffect(text, elementId, delay = 100) {
+        const element = document.getElementById(elementId);
+        let i = 0;
+    
+        function type() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, delay);  // Delay between each character
+            }
+        }
+    
+        type();
+    }
+    
+ 
+    typeWriterEffect("I'm Tater. I am from Bloopaland. Click on record button to ask a story, song or a nursery rhyme! ▶️", "typewriter-text", 100);
+    
+    </script>
+    <audio id="main-audio" src="{{ url_for('static', filename='audio/adaptive-tate.mp3') }}" preload="auto"></audio>
+    <script>
+      // Set the volume for main audio
+      setTimeout(function() {
+          const mainAudio = document.getElementById('main-audio');
+          mainAudio.play(); // Play the main audio
+      }, 2000); // 2000 milliseconds = 2 seconds
+  
+      // Ensure the audio elements are set to play after the page load
+      window.onload = function() {
+          backgroundAudio.play();
+          mainAudio.play();
+      };
+  
+   
+    </script>
+    <script type="module">
+        import { createClient, LiveTranscriptionEvents } from "https://cdn.jsdelivr.net/npm/@deepgram/sdk/+esm";
+    
+        let mediaRecorder;
+        const deepgramApiKey = "{{ deepgram_api_key }}"; // Use the passed API key
+        let accumulatedTranscript = ""; // Variable to accumulate transcript text
+    
+        
+        document.querySelector("#recordButton").addEventListener("click", () => {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.stop();
+                document.querySelector("#status").textContent = "Recording stopped.";
+            } else {
+                startRecording();
+            }
+        });
+    
+        const startRecording = () => {
+            const deepgram = createClient(deepgramApiKey);
+    
+            const options = {
+                model: "nova",
+                punctuate: true,
+                smart_format: true,
+                interim_results: true,
+                vad_events: true,
+                utterance_end_ms: 3000
+            };
+    
+            const dgConnection = deepgram.listen.live(options);
+            const processingOverlay = document.getElementById('processingOverlay');
+    
+            dgConnection.on(LiveTranscriptionEvents.Open, () => {
+                dgConnection.on(LiveTranscriptionEvents.Transcript, (data) => {
+                    const transcript = data.channel.alternatives[0].transcript;
+                    accumulatedTranscript += transcript + " "; // Accumulate the transcript text
+                });
+    
+                dgConnection.on(LiveTranscriptionEvents.UtteranceEnd, () => {
+                  processingOverlay.classList.add('active');
+
+                    sendToGemini(accumulatedTranscript.trim());
+                    accumulatedTranscript = ""; // Reset the accumulated transcript
+                });
+    
+                navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            dgConnection.send(event.data);
+                        }
+                    };
+                    mediaRecorder.start(1000);
+                });
+    
+                document.querySelector("#status").textContent = "Listening...";
+            });
+        };
+    
+        const sendToGemini = async (transcript) => {
+            const responseArea = document.getElementById("gemini-response");
+            const geminiApiKey = "{{ gemini_api_key }}";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`;
+            const prompt = `I might talk nonsensically with lots of repetition. Avoid special characters and refrain from using single or double quotes in the story. Always guess the closest matching popular nursery rhyme or story. Your aim is to first make sense of what I'm asking and then answer. Just give the answer as short as possible (3-4 lines); you don't need to say that I seem to be asking this question, etc. It will be mostly a popular English kids nursery rhyme or story. If it's a kids' story or nursery rhyme, identify all characters, animals, objects, and props present in it. Include as many specific details as possible to capture the essence of the story. Format the result as a JSON object like this:
+
+            {
+              "topic": "The topic or question asked",
+              "characters": [
+                {
+                  "name": "Character Name",
+                  "type": "human or animal or object or element"
+                }
+              ],
+              "story": "A short write-up of the story, including key plot points and elements without using single or double quotes.",
+              "objects": [
+                {
+                  "name": "Object Name",
+                  "type": "type of object (e.g., toy, vehicle, food, etc.)"
+                }
+              ],
+              "props": [
+                {
+                  "name": "Prop Name",
+                  "type": "type of prop (e.g., instrument, accessory, etc.)"
+                }
+              ]
+            }
+            
+            Here is the transcript: ${transcript}`;
+                        
+    
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
+        
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+    
+                const data = await response.json();
+                const answer = data.candidates[0].content.parts[0].text;
+    
+                // Send the raw result to Flask for cleanup
+                const cleanedResponse = await fetch('/clean_gemini_response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ response: answer })
+                });
+    
+                const cleanedData = await cleanedResponse.json();
+                responseArea.value = JSON.stringify(cleanedData, null, 2); // Show the cleaned result
+    
+                // Render the results in a card carousel
+                renderResults(cleanedData);
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        };
+    
+        const renderResults = (data) => {
+          const container = document.getElementById("card-container");
+          const characterContainer = document.getElementById("card-container2");
+          const topicElement = document.getElementById("topic-text");
+          const charactersElement = document.getElementById("characters");
+      
+          // Clear previous results
+          if (container) {
+              container.innerHTML = ""; // Clear previous results in the main container
+          }
+          if (characterContainer) {
+              characterContainer.innerHTML = ""; // Clear previous thumbnails in the character container
+          }
+          if (charactersElement) {
+              charactersElement.innerHTML = ""; // Clear previous characters list
+          }
+      
+          processingOverlay.classList.remove('active');
+          // Display topic and story
+          topicElement.innerHTML = `${data.topic}`;
+          var storyDiv = document.getElementById("story");
+          storyDiv.innerHTML = '';
+
+          var cleanedStory = data.story.replace(/["']/g, ''); // Removes both single and double quotes
+          storyDiv.innerHTML += `&ldquo; ${cleanedStory} &rdquo;`;
+          
+          storyDiv.onclick = function() {
+              textToSpeech(cleanedStory); // Use the cleaned story for text-to-speech
+          };
+                    
+          // Display characters list
+          const charactersList = Array.isArray(data.character_thumbnails)
+              ? Object.keys(data.character_thumbnails).map(char => char).join(", ")
+              : data.characters || 'No characters found.';
+          charactersElement.innerHTML = `<strong>Characters:</strong> ${charactersList}`;
+      
+          // Render character thumbnails
+          if (data.character_thumbnails) {
+              for (const [character, thumbnail] of Object.entries(data.character_thumbnails)) {
+                  if (thumbnail.includes("encrypted-tbn0.gstatic.com")) {
+                      const card = document.createElement('div');
+                      card.classList.add('card');
+                      card.setAttribute('data', `${character}`);
+                      card.innerHTML = `
+                        <img class="card-img-top" src="${thumbnail}" alt="${character}" style="cursor: pointer;">
+<div class="card-body">
+    <h5 class="card-title">${character}</h5>
+    <!-- Emoji for streaming -->
+    <span role="button" onclick="textToSpeech('${character}', 'stream')" style="font-size: 24px; cursor: pointer;" title="Stream Sound">🔊</span>
+    <!-- Emoji for generating -->
+    <span role="button" onclick="textToSpeech('${character}', 'generate')" style="font-size: 24px; cursor: pointer;" title="Generate Sound">🎶</span>
+</div>
+
+
+{% if audio_data %}
+<h2>Generated Sound:</h2>
+<audio controls>
+    <source src="data:audio/mpeg;base64,{{ audio_data }}" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+{% endif %}
+                      `;
+                      characterContainer.appendChild(card); // Append card to the character container
+                  }
+              }
+          }
+      
+          // Render object thumbnails
+          if (data.object_thumbnails) {
+              for (const [object, thumbnail] of Object.entries(data.object_thumbnails)) {
+                  if (thumbnail.includes("encrypted-tbn0.gstatic.com")) {
+                      const card = document.createElement('div');
+                      card.classList.add('card');
+                      card.setAttribute('data', `${object}`);
+                      card.innerHTML = `
+<img class="card-img-top" src="${thumbnail}" alt="${object}" style="cursor: pointer;">
+<div class="card-body">
+    <h5 class="card-title">${object}</h5>
+    <!-- Emoji for streaming -->
+    <span role="button" onclick="textToSpeech('${object}', 'stream')" style="font-size: 24px; cursor: pointer;" title="Stream Sound">🔊</span>
+    <!-- Emoji for generating -->
+    <span role="button" onclick="textToSpeech('${object}', 'generate')" style="font-size: 24px; cursor: pointer;" title="Generate Sound">🎶</span>
+</div>
+
+
+{% if audio_data %}
+<h2>Generated Sound:</h2>
+<audio controls>
+    <source src="data:audio/mpeg;base64,{{ audio_data }}" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+{% endif %}
+                      `;
+                      characterContainer.appendChild(card); // Append card to the character container
+                  }
+              }
+          }
+      };
+                        </script>
+
+  </body>
+</html>

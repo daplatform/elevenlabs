@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="static/js/textToSpeech.js"></script> <!-- Text-to-speech logic -->
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;600&display=swap');
+
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-image: url("{{ url_for('static', filename='images/background/background.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: "Poppins", sans-serif;
+        }
+        .navbar {
+            background-color: rgba(36, 51, 98, 0.8);
+            padding-right: 20px;
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+        .workflow {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .step {
+            border: 2px solid #161D6F;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+            transition: background-color 0.5s;
+        }
+        .highlight {
+            background-color: #A6E3E9; /* Highlight color */
+        }
+        .output-container {
+            margin-top: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #161D6F;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Bloopa Logo">
+        </a>
+        <h5 class="adaptive-aac-title" style="color:#fff">Adaptive AAC |</h5>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main') }}" id="homeButton">🏠 Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('about') }}" id="aboutButton">ℹ️ About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('features') }}">⭐ Features</a>
+                </li>
+            </ul>
+            <button class="logout-button" id="sourceCodeButton" onclick="window.location.href='https://github.com/your-repo'">Source Code</button>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row justify-content-center align-items-center" style="height: 80vh;">
+            <div class="col-6 text-center">
+                <h2>Select an Audio</h2>
+                <div class="btn-group-vertical">
+                    <button class="btn btn-light" onclick="playAudio(1)">Audio 1</button>
+                    <button class="btn btn-light" onclick="playAudio(2)">Audio 2</button>
+                    <button class="btn btn-light" onclick="playAudio(3)">Audio 3</button>
+                    <button class="btn btn-light" onclick="playAudio(4)">Audio 4</button>
+                </div>
+                <div id="output" class="output-container mt-4"></div>
+            </div>
+            <div class="col-6">
+                <div class="workflow">
+                    <h3>Workflow</h3>
+                    <div id="workflowContainer">
+                        <div class="step" id="step1">Select Audio</div>
+                        <div class="step" id="step2">Play Audio</div>
+                        <div class="step" id="step3">Extract Transcript</div>
+                        <div class="step" id="step4">Detect Word</div>
+                        <div class="step" id="step5">Output Result</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function playAudio(audioNumber) {
+            const audio = new Audio(`static/audio/speech/audio${audioNumber}.wav`);
+            audio.play();
+
+            const messages = {
+                1: "stick",
+                2: "tear",
+                3: "except in the winter when the ooze or snow or ice prevents",
+                4: "pat"
+            };
+
+            // Simulate processing steps for display
+            const output = document.getElementById("output");
+            output.innerText = "Processing...";
+            let step = 1;
+            const interval = setInterval(() => {
+                if (step > 5) {
+                    clearInterval(interval);
+                    output.innerText = messages[audioNumber];
+                    return;
+                }
+                highlightStep(step);
+                step++;
+            }, 2000); // Update every 2 seconds
+        }
+
+        function highlightStep(step) {
+            const stepElement = document.getElementById(`step${step}`);
+            stepElement.classList.add('highlight');
+        }
+    </script>
+</body>
+</html>

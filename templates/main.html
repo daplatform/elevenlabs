@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection</title>
+    <script src="https://sdk.morphcast.com/mphtools/v1.1/mphtools.js" data-config="cameraPrivacyPopup, compatibilityUI, compatibilityAutoCheck"></script>
+    <script src="https://ai-sdk.morphcast.com/v1.16/ai-sdk.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="static/js/textToSpeech.js"></script>  <!-- Text-to-speech logic -->
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;600&display=swap');
+
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-image: url("{{ url_for('static', filename='images/background/background.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: "Poppins", sans-serif;
+        }
+        .navbar {
+            background-color: rgba(36, 51, 98, 0.8);
+            padding-right: 20px;
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+        .attention-bars {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        .attention-bar {
+            height: 12px;
+            width: 20px;
+            margin-left: 2px;
+            border: 1px solid #000;
+        }
+        .attention-label {
+            color: white;
+            text-align: center;
+            margin-left: 10px;
+        }
+        .logout-button {
+            margin-left: 20px;
+            color: white;
+            background-color: #1b2a5b;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 15px;
+            cursor: pointer;
+        }
+        .logout-button:hover {
+            background-color: #152040;
+        }
+        .content {
+            text-align: center;
+            margin-top: 20px;
+            position: relative;
+            flex-grow: 1; /* Ensure content grows to fill the space */
+            z-index: 1; /* Lower z-index for content */
+        }
+        
+        .glass-circles {
+            position: absolute;
+            width: 100%;
+            bottom: 20px; /* Position circles at the bottom */
+            left: 0;
+            display: flex;
+            justify-content: space-between; /* Space the circles evenly */
+            padding: 0 10%; /* Add some padding to the sides */
+            pointer-events: auto; /* Enable pointer events */
+            z-index: 2; /* Higher z-index for circles */
+        }
+        
+        .circle {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            width: 150px; /* Fixed width */
+            height: 150px; /* Fixed height */
+            display: flex; /* Enable flexbox */
+            align-items: center; /* Center vertically */
+            justify-content: center; /* Center horizontally */
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3),
+                        0 0 15px 3px rgba(36, 51, 98, 0.8), /* Blue gradient shadow */
+                        inset 0 0 10px rgba(36, 51, 98, 0.5); /* Inner glow */
+            overflow: hidden; /* Prevent overflow */
+            text-overflow: ellipsis; /* Optional: show ellipsis for overflow text */
+            cursor: pointer; /* Change cursor to pointer */
+            z-index: 3333; /* Higher z-index for individual circles */
+        }
+                
+        #bloopaImage {
+            position: relative; /* Ensure it can be layered properly */
+            z-index: 8; /* Lower z-index for Bloopa image */
+        }
+        .theme-switcher {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid #243362;
+            cursor: pointer;
+            display: flex;
+            z-index : 500000;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Comment box styles */
+        .comment-box {
+            position: absolute;
+            top: 30%; /* Align with the height of Bloopa */
+            left: calc(50% + 200px); /* Move more to the right */
+            width: 200px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 4; /* Higher z-index to appear above other elements */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Align text to the left */
+        }
+        .adaptive-aac-title {
+            margin-top: 10px; /* Adjust the value as needed */
+        }
+        
+        .comment-box:before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 100%; /* Positioning for the triangle */
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent rgba(255, 255, 255, 0.8) transparent transparent; /* Triangle pointing towards Bloopa */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Bloopa Logo">
+        </a>
+        <h5 class="adaptive-aac-title" style="color:#fff">AMIS |</h5>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('about') }}" id="aboutButton"> <ℹ️  About></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('features') }}"><⭐ Features></a>
+                </li>
+            </ul>
+            <div class="attention-bars">
+                <div class="attention-bar" id="bar1"></div>
+                <div class="attention-bar" id="bar2"></div>
+                <div class="attention-bar" id="bar3"></div>
+                <div class="attention-bar" id="bar4"></div>
+                <div class="attention-label">Attention</div>
+                <button class="logout-button" id="sourceCodeButton" onclick="window.location.href='https://github.com/your-repo'">Source Code</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content">
+        <img id="bloopaImage" src="{{ url_for('static', filename='images/bloopas/5.png') }}" alt="Bloopa Logo" style="height:83%;cursor:pointer;">
+
+        <div class="glass-circles">
+            <div class="circle" onclick="window.location.href='{{ url_for('adaptive') }}'">Multimodal VAK Engagement</div>
+            <div class="circle" onclick="window.location.href='{{ url_for('abstract') }}'">Visual Semiotics</div>
+            <div class="circle" onclick="window.location.href='{{ url_for('social') }}'">Social Cognition</div>
+            <div class="circle" onclick="window.location.href='{{ url_for('intelligent_aac') }}'">Cognitive Scaffolding</div>
+            <div class="circle" onclick="window.location.href='{{ url_for('mother') }}'">Dynamic Pedagogical Narratives</div>
+            <div class="circle" onclick="window.location.href='{{ url_for('speech') }}'">Predictive Speech Reconstruction</div>
+        </div>
+
+        <div class="theme-switcher" id="themeSwitcher"><img id="bloopaImage" src="{{ url_for('static', filename='images/egg.png') }}" alt="Bloopa Logo" style="height:60%;"></div>
+
+        <!-- Comment box -->
+        <div class="comment-box" id="comment-box">
+            <p>Hello! I'm Dave Bloopa! Click on the topics to get started ▶️</p>
+        </div>
+        <audio id="background-audio" src="{{ url_for('static', filename='audio/bg-music1.mp3') }}" preload="auto"  loop autoplay></audio>
+        <audio id="main-audio" src="{{ url_for('static', filename='audio/main-audio.mp3') }}" preload="auto"></audio>
+        <script>
+            const backgroundAudio = document.getElementById('background-audio');
+            backgroundAudio.volume = 0.4; // 10% volume
+            backgroundAudio.play(); // Play the background audio
+        
+            // Set the volume for main audio
+            setTimeout(function() {
+                const mainAudio = document.getElementById('main-audio');
+                mainAudio.play(); // Play the main audio
+            }, 2000); // 2000 milliseconds = 2 seconds
+        
+            // Ensure the audio elements are set to play after the page load
+            window.onload = function() {
+                backgroundAudio.play();
+                mainAudio.play();
+            };
+        
+
+                    </script>
+        <script>
+            // Add click event listener to the about button to refresh the page
+            document.getElementById('aboutButton').addEventListener('click', function() {
+                location.reload(); // Refresh the page
+            });
+
+            // Background switching logic
+            const backgrounds = [
+                "{{ url_for('static', filename='images/background/background.jpg') }}",
+                "{{ url_for('static', filename='images/background/background1.jpg') }}",
+                "{{ url_for('static', filename='images/background/background2.jpg') }}",
+                "{{ url_for('static', filename='images/background/background3.jpg') }}"
+            ];
+            
+            let currentIndex = 0; // Start with the first background
+
+            // Function to switch the background
+            function switchBackground() {
+                currentIndex = (currentIndex + 1) % backgrounds.length; // Cycle through backgrounds
+                document.body.style.backgroundImage = `url('${backgrounds[currentIndex]}')`; // Update the background
+            }
+
+            // Add click event listener to the theme switcher button
+            document.getElementById('themeSwitcher').addEventListener('click', switchBackground);
+
+            // Hardcode the bars to show green for now (max attention level)
+            function setGreenBars() {
+                const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3'), document.getElementById('bar4')];
+                const green = '#0f0'; // Green color
+
+                bars.forEach(bar => {
+                    bar.style.backgroundColor = green; // Set all bars to green
+                });
+            }
+
+            // Call the function to set green bars
+            setGreenBars();
+
+            // Add click event listener to the Bloopa image
+            document.getElementById('comment-box').addEventListener('click', function() {
+                const audio = document.getElementById('bloopaAudio');
+                audio.play(); // Play the audio when the image is clicked
+            });
+
+            // Configure camera privacy popup
+            MphTools.CameraPrivacyPopup.setText({
+                "title": "Allow us to use your camera",
+                "description": "This experience is designed to be viewed with your camera on. The next screen will ask your consent to access data from your camera.",
+                "url": "https://YOUR_DOMAIN/<YOUR_PRIVACY_POLICY>"
+            });
+        </script>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Cycle Flowchart using Mermaid.js</title>
+    <!-- Include Mermaid.js -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+<body>
+
+    <h1>Water Cycle Flowchart</h1>
+    <!-- Mermaid Diagram -->
+    <div class="mermaid">
+        graph TD;
+            A[Sun heats water] --> B[Evaporation];
+            B --> C[Condensation];
+            C --> D[Precipitation];
+            D --> E[Collection];
+            E --> F[Water Cycle Complete];
+    </div>
+
+</body>
+</html>

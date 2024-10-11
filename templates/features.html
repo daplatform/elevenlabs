@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection</title>
+    <script src="https://sdk.morphcast.com/mphtools/v1.1/mphtools.js" data-config="cameraPrivacyPopup, compatibilityUI, compatibilityAutoCheck"></script>
+    <script src="https://ai-sdk.morphcast.com/v1.16/ai-sdk.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="static/js/textToSpeech.js"></script>  <!-- Text-to-speech logic -->
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;600&display=swap');
+
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-image: url("{{ url_for('static', filename='images/background/background11.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: "Poppins", sans-serif;
+        }
+        .navbar {
+            background-color: rgba(36, 51, 98, 0.8);
+            padding-right: 20px;
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+        .attention-bars {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        .attention-bar {
+            height: 12px;
+            width: 20px;
+            margin-left: 2px;
+            border: 1px solid #000;
+        }
+        .attention-label {
+            color: white;
+            text-align: center;
+            margin-left: 10px;
+        }
+        .logout-button {
+            margin-left: 20px;
+            color: white;
+            background-color: #1b2a5b;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 15px;
+            cursor: pointer;
+        }
+        .logout-button:hover {
+            background-color: #152040;
+        }
+        .content {
+            text-align: center;
+            margin-top: 20px;
+            position: relative;
+            flex-grow: 1; /* Ensure content grows to fill the space */
+            z-index: 1; /* Lower z-index for content */
+        }
+        
+        .glass-circles {
+            position: absolute;
+            width: 100%;
+            bottom: 20px; /* Position circles at the bottom */
+            left: 0;
+            display: flex;
+            justify-content: space-between; /* Space the circles evenly */
+            padding: 0 10%; /* Add some padding to the sides */
+            pointer-events: auto; /* Enable pointer events */
+            z-index: 2; /* Higher z-index for circles */
+        }
+        
+        .circle {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            width: 150px; /* Fixed width */
+            height: 150px; /* Fixed height */
+            display: flex; /* Enable flexbox */
+            align-items: center; /* Center vertically */
+            justify-content: center; /* Center horizontally */
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3),
+                        0 0 15px 3px rgba(36, 51, 98, 0.8), /* Blue gradient shadow */
+                        inset 0 0 10px rgba(36, 51, 98, 0.5); /* Inner glow */
+            overflow: hidden; /* Prevent overflow */
+            text-overflow: ellipsis; /* Optional: show ellipsis for overflow text */
+            cursor: pointer; /* Change cursor to pointer */
+            z-index: 3333; /* Higher z-index for individual circles */
+        }
+                
+        #bloopaImage {
+            position: relative; /* Ensure it can be layered properly */
+            left: 30%; /* Adjust as needed */
+            z-index: 8; /* Lower z-index for Bloopa image */
+        }
+
+        /* Glass card styles */
+        .glass-card {
+            position: absolute;
+            top: 20%;  /* Adjust as needed */
+            left: 5%; /* Adjust as needed */
+            width: 60%;  /* 40% width */
+            height: 70%; /* 70% height */
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            color: #000; /* Text color */
+            z-index: 5; /* Ensure it's above other elements */
+            overflow: auto; /* Enable scrolling */
+        }
+        
+
+        .adaptive-aac-title {
+            margin-top: 10px; /* Adjust the value as needed */
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Glass Card -->
+    <div class="glass-card">
+        <h2>The Technological Shift: AMIS and Multimodal AI</h2>
+        <p>
+            AMIS leverage cutting-edge technologies such as Artificial Intelligence (AI), Natural Language Processing (NLP), and multimodal interfaces to create rich, engaging communication experiences. The global multimodal AI market is projected to grow from $893.5 million in 2023 to $10.55 billion by 2031, reflecting a staggering CAGR of 36.2%.
+        </p>
+        <h3>Key Features of AMIS</h3>
+        <ul>
+            <li><strong>Multi-modal Input:</strong> Users can engage through speech, touch, or gestures. For instance, vocalizing "Wheels on the Bus" triggers relevant visuals and sounds, enhancing learning via VAK (Visual, Auditory, Kinesthetic) methods.</li>
+            <li><strong>Dynamic Concept Explanation:</strong> Abstract ideas like empathy are simplified through generated images and audio explanations.</li>
+            <li><strong>Speech Restoration Technologies:</strong> Advanced Automatic Speech Recognition (ASR) models can detect and reconstruct speech patterns for users with dysarthria, significantly improving their ability to communicate.</li>
+            <li><strong>Predictive Interaction Capabilities:</strong> Utilizing Large Language Models (LLMs), AMIS can anticipate user responses based on context. When prompted about visiting the doctor, the system offers options like "yes," "no," or "maybe," vocalizing the selected choice.</li>
+            <li><strong>Engaging Learning Experiences:</strong> AI-generated content featuring beloved characters can explain complex topics using relatable narratives, making learning both fun and effective.</li>
+        </ul>
+        </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Bloopa Logo">
+        </a>
+        <h5 class="adaptive-aac-title" style="color:#fff">AMIS |</h5>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main') }}" id="homeButton"><🏠 Home></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('about') }}" id="aboutButton"><ℹ️ About></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('features') }}"><⭐ Features></a>
+                </li>
+            </ul>         
+            <div class="attention-bars">
+                <div class="attention-bar" id="bar1"></div>
+                <div class="attention-bar" id="bar2"></div>
+                <div class="attention-bar" id="bar3"></div>
+                <div class="attention-bar" id="bar4"></div>
+                <div class="attention-label">Attention</div>
+                <button class="logout-button" id="sourceCodeButton" onclick="window.location.href='https://github.com/your-repo'">Source Code</button>
+            </div>
+        </div>
+    </nav>
+    <audio id="background-audio" src="{{ url_for('static', filename='audio/bg-music3.mp3') }}" preload="auto"  loop autoplay></audio>
+    <audio id="main-audio" src="{{ url_for('static', filename='audio/feature-bloopa.mp3') }}" preload="auto"></audio>
+
+    <div class="content">
+        <h3><strong>The Bloopa Story !</strong></h3>
+        <img src="{{ url_for('static', filename='images/bloopas/11.png') }}" alt="Bloopa" id="bloopaImage" />
+    </div>
+    <script>
+        const backgroundAudio = document.getElementById('background-audio');
+        backgroundAudio.volume = 0.1; // 10% volume
+        backgroundAudio.play(); // Play the background audio
+    
+        // Set the volume for main audio
+        setTimeout(function() {
+            const mainAudio = document.getElementById('main-audio');
+            mainAudio.play(); // Play the main audio
+        }, 2000); // 2000 milliseconds = 2 seconds
+    
+        // Ensure the audio elements are set to play after the page load
+        window.onload = function() {
+            backgroundAudio.play();
+            mainAudio.play();
+        };
+    
+
+                </script>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

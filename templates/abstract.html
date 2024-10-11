@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore abstract concepts through emotion detection and learning.">
+    <title>Emotion Detection</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/abstract.css') }}" />
+    <script src="static/js/textToSpeech.js" defer></script>  <!-- Text-to-speech logic -->
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Bloopa Logo" height="30">
+        </a>
+        <h5 style="color:#fff"> Adaptive AAC |</h5>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main') }}" id="homeButton"><🏠 Home></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('about') }}" id="aboutButton"><ℹ️ About></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('features') }}"><⭐ Features></a>
+                </li>
+            </ul>
+            <div class="attention-bars">
+                <div class="attention-bar" id="bar1"></div>
+                <div class="attention-bar" id="bar2"></div>
+                <div class="attention-bar" id="bar3"></div>
+                <div class="attention-bar" id="bar4"></div>
+                <div class="attention-label">Attention</div>
+                <button class="logout-button" id="sourceCodeButton" aria-label="View Source Code" onclick="window.location.href='https://github.com/your-repo'">Source Code</button>
+            </div>
+        </div>
+    </nav>
+    
+    <audio id="background-audio" src="{{ url_for('static', filename='audio/bg-music3.mp3') }}" preload="auto"  loop autoplay></audio>
+    <audio id="main-audio" src="{{ url_for('static', filename='audio/abstract-peaches.mp3') }}" preload="auto"></audio>
+
+    <script>
+        const backgroundAudio = document.getElementById('background-audio');
+        backgroundAudio.volume = 0.1; // 10% volume
+        backgroundAudio.play(); // Play the background audio
+    
+        // Set the volume for main audio
+        setTimeout(function() {
+            const mainAudio = document.getElementById('main-audio');
+            mainAudio.play(); // Play the main audio
+        }, 2000); // 2000 milliseconds = 2 seconds
+    
+        // Ensure the audio elements are set to play after the page load
+        window.onload = function() {
+            backgroundAudio.play();
+            mainAudio.play();
+        };
+    
+
+                </script>
+
+    
+    <div class="content d-flex">
+        <img id="bloopaImage" src="{{ url_for('static', filename='images/bloopas/2.png') }}" alt="Bloopa Image" style="height:83%; cursor:pointer;">
+
+        <div class="glass-card left-glass-card flex-fill">
+            <p id="imageContainer">
+                <img id="generated-image" src="" alt="Generated Image" style="display: none; width: 450px;">
+            </p>
+        </div>
+        
+        <div class="glass-card right-glass-card flex-fill">
+            <h5>Explanation</h5>
+            <p id="generatedContent"></p>
+        </div>
+    </div>
+
+    <div class="glass-circles">
+        <div class="circle" onclick="sendConcept('Anger')">Anger<br>❤️</div>
+        <div class="circle" onclick="sendConcept('Empathy')">Empathy<br>🤝</div>
+        <div class="circle" onclick="sendConcept('Friendship')">Friendship<br>👯</div>
+        <div class="circle" onclick="sendConcept('Creativity')">Creativity<br>✨</div>
+        <div class="circle" onclick="sendConcept('Imagination')">Imagination<br>🌈</div>
+    </div>
+
+    <div class="theme-switcher" id="themeSwitcher">
+        <img id="eggImage" src="{{ url_for('static', filename='images/egg.png') }}" alt="Bloopa Egg" style="height:60%;">
+    </div>
+
+    <div class="comment-box" id="comment-box">
+        <p>Hello! I'm Peaches Bloopa! Let me teach you a few abstract concepts, click on the tiles to explore more ▶️</p>
+    </div>
+
+    <script>
+        function generateMetadataForConcept(concept) {
+            fetch('/process_metadata_concept', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ concept: concept })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.content) {
+                    document.getElementById('generatedContent').innerHTML = data.content;
+                    textToSpeech(concept + " is " + data.content);
+                } else {
+                    console.error('Error:', data.error);
+                    alert('Error retrieving content. Please try again.');  // User feedback on error
+                }
+        
+                if (data.image_url) {
+                    // Show the image by setting the src attribute
+                    const generatedImage = document.getElementById('generated-image');
+                    generatedImage.src = data.image_url; // Set the image source to the URL
+                    generatedImage.style.display = 'block'; // Make the image visible
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while processing your request. Please try again.');  // User feedback on error
+            });
+        }
+                
+        function sendConcept(concept) {
+            generateMetadataForConcept(concept);
+            fetch('/process_concept', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ concept: concept })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('comment-box').innerText = data.result;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        document.getElementById('aboutButton').addEventListener('click', function() {
+            location.reload(); // Refresh the page
+        });
+
+        const backgrounds = [
+            "{{ url_for('static', filename='images/background/background.jpg') }}",
+            "{{ url_for('static', filename='images/background/background1.jpg') }}",
+            "{{ url_for('static', filename='images/background/background2.jpg') }}",
+            "{{ url_for('static', filename='images/background/background3.jpg') }}"
+        ];
+
+        let currentIndex = 0;
+
+        function switchBackground() {
+            currentIndex = (currentIndex + 1) % backgrounds.length;
+            document.body.style.backgroundImage = `url('${backgrounds[currentIndex]}')`;
+        }
+
+        document.getElementById('themeSwitcher').addEventListener('click', switchBackground);
+
+        function setGreenBars() {
+            const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3'), document.getElementById('bar4')];
+            const green = '#0f0';
+            bars.forEach(bar => bar.style.backgroundColor = green);
+        }
+
+        setGreenBars();
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js" defer></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" defer></script>
+</body>
+</html>

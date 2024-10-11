@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Frame</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            background-color: #000; /* Black background */
+            position: relative; /* Enable positioning for audio element */
+            overflow: hidden; /* Prevent scrollbars */
+        }
+
+        video {
+            width: 100%; /* Responsive video width */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        audio {
+            display: none; /* Hide audio element */
+        }
+
+        .start-button {
+            position: absolute;
+            bottom: 20px; /* Position the button at the bottom */
+            left: 50%; /* Center the button horizontally */
+            transform: translateX(-50%); /* Adjust to center */
+            padding: 15px 30px; /* Button size */
+            font-size: 24px; /* Larger font size */
+            cursor: pointer; /* Pointer cursor */
+            background-color: #007BFF; /* Blue background */
+            color: white; /* Text color */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+            transition: background-color 0.3s ease; /* Smooth background color transition */
+        }
+
+        .start-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Background -->
+    <video id="background-video" muted>
+        <source src="{{ url_for('static', filename='videos/video1.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Audio Element -->
+  <audio id="background-audio" src="{{ url_for('static', filename='audio/background.mp3') }}" preload="auto"></audio> 
+
+    <!-- Start Button -->
+    <button class="start-button" id="start-button">Start</button>
+
+    <script>
+        const video = document.getElementById('background-video');
+        const audio = document.getElementById('background-audio');
+        const startButton = document.getElementById('start-button');
+
+        startButton.onclick = function() {
+            video.play(); // Play the video
+            audio.play(); // Play the audio
+            startButton.style.display = 'none'; // Hide the button after playing
+        };
+
+        // Event listener for when the video ends
+        video.onended = function() {
+            window.location.href = '/main'; // Use the Flask route
+        };
+    </script>
+</body>
+</html>

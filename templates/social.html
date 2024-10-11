@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        .avatar {
+            cursor: pointer;
+            border: 2px solid transparent; /* Default border */
+            transition: border 0.3s ease; /* Smooth transition */
+        }
+    
+        .avatar.talking {
+            border: 3px solid blue; /* Highlight border */
+            font-weight: bold; /* Bold font if you want */
+            transform: scale(1.1); /* Slightly enlarge the avatar */
+        }
+    </style>
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="static/js/textToSpeech.js"></script>  <!-- Text-to-speech logic -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/speech.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}" /> <!-- Link to custom CSS -->
+    <style>
+        /* Additional styling if needed */
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Bloopa Logo">
+        </a>
+        <h5 style="color:#fff"> Adaptive AAC |</h5>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main') }}" id="homeButton">🏠 Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('about') }}" id="aboutButton">ℹ️ About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('features') }}">⭐ Features</a>
+                </li>
+            </ul>
+            <div class="attention-bars">
+                <div class="attention-bar" id="bar1"></div>
+                <div class="attention-bar" id="bar2"></div>
+                <div class="attention-bar" id="bar3"></div>
+                <div class="attention-bar" id="bar4"></div>
+                <div class="attention-label">Attention</div>
+                <button class="logout-button" id="sourceCodeButton" onclick="window.location.href='https://github.com/your-repo'">Source Code</button>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="content d-flex">
+        <img id="bloopaImage" src="{{ url_for('static', filename='images/bloopas/7.png') }}" alt="Bloopa Image" style="height:83%; cursor:pointer;">
+
+        <div class="left-glass-card flex-fill">
+            <h5>Build Virtual Friends</h5>
+            <div class="audio-list">
+                <div id="avatarList" class="d-flex flex-wrap justify-content-center">
+                    {% set avatars = [
+                        {"name": "Aria", "attributes": "funny, optimistic", "voice_id": "9BWtsMINqrJLrRacOk9x"},
+                        {"name": "Roger", "attributes": "shy, curious", "voice_id": "CwhRBWXzGAHq8TQ4Fs17"},
+                        {"name": "Sarah", "attributes": "adventurous, playful", "voice_id": "EXAVITQu4vr4xnSDxMaL"},
+                        {"name": "Laura", "attributes": "enthusiastic, supportive", "voice_id": "FGY2WhTYpPnrIDTdsKH5"},
+                        {"name": "Charlie", "attributes": "thoughtful, kind", "voice_id": "IKne3meq5aSn9XLyUdCD"},
+                        {"name": "George", "attributes": "smart, witty", "voice_id": "JBFqnCBsd6RMkjVDRZzb"}
+                    ] %}
+                    {% for avatar in avatars %}
+                    <img src="{{ url_for('static', filename='images/avatar/avatar-' ~ loop.index ~ '.jpg') }}"
+                         class="avatar" id="{{ avatar.voice_id }}"
+                         onclick="displayAvatarInfo({{ loop.index0 }})" name ="{{ avatar.name }}"
+                         alt="{{ avatar.name }} Avatar" title="{{ avatar.attributes }}">
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Updated Right Pane -->
+        <div class="right-glass-card flex-fill">
+            <h5 class="text-center" style="color:#000;">Ask a Question</h5>
+            <div class="form-group">
+                <input type="text" class="form-control fancy-input" id="topic" placeholder="Type your question here...">
+            </div>
+            <button class="fancy-btn" id="ask-btn">Submit</button>
+
+
+        </div>
+    </div>
+
+    <div class="comment-box" id="comment-box">
+        <p>Hello! I'm Gonzo Bloopa! This page allows you to interact with Virtual Friends and discuss on a topic ▶️</p>
+    </div>
+
+    <script>
+        // Store avatar details in an array of objects
+        const avatars = [
+            {"name": "Aria", "attributes": "funny, optimistic", "voice_id": "9BWtsMINqrJLrRacOk9x"},
+            {"name": "Roger", "attributes": "shy, curious", "voice_id": "CwhRBWXzGAHq8TQ4Fs17"},
+            {"name": "Sarah", "attributes": "adventurous, playful", "voice_id": "EXAVITQu4vr4xnSDxMaL"},
+            {"name": "Laura", "attributes": "enthusiastic, supportive", "voice_id": "FGY2WhTYpPnrIDTdsKH5"},
+            {"name": "Charlie", "attributes": "thoughtful, kind", "voice_id": "IKne3meq5aSn9XLyUdCD"},
+            {"name": "George", "attributes": "smart, witty", "voice_id": "JBFqnCBsd6RMkjVDRZzb"}
+        ];
+
+        // Function to display avatar information when clicked
+        function displayAvatarInfo(index) {
+            // Remove 'talking' class from all avatars
+            $('.avatar').removeClass('talking');
+        
+            // Add 'talking' class to the clicked avatar
+            const selectedAvatar = $('.avatar').eq(index);
+            selectedAvatar.addClass('talking');
+        
+        }
+        
+            $(document).ready(function () {
+                $('#ask-btn').click(function () {
+                    const topic = $('#topic').val();
+                    $.ajax({
+                        url: '/generate-dialogue',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ topic: topic }),
+                        success: function (data) {
+                            parseDialogues(data.dialogues);
+                        },
+                        error: function (err) {
+                            console.error(err);
+                            alert('Error occurred while fetching dialogues.');
+                        }
+                    });
+                });
+    
+                function parseDialogues(dialogues) {
+                    const outputDiv = $('#output');
+                    outputDiv.empty(); // Clear previous output
+    
+                    // Store the dialogues for audio playback
+                    const audioQueue = [];
+    
+                    // Process each dialogue entry
+                    dialogues.forEach(([dialogue, voiceId]) => {
+                        const parts = dialogue.split(':'); // Split on colon
+                        if (parts.length > 1) {
+                            const name = parts[0].trim(); // Extract the name (but we will not use it for audio)
+                            const text = parts[1].trim(); // Extract the dialogue text
+    
+                            // Display the result in the specified format
+                            outputDiv.append(`
+                                <p>
+                                    <strong>Name:</strong> ${name}<br>
+                                    <strong>Voice ID:</strong> ${voiceId}<br>
+                                    <strong>Dialog:</strong> ${text}<br>
+                                </p>
+                                <hr>
+                            `);
+    
+                            // Push only the dialogue and voiceId to the audioQueue
+                            audioQueue.push({ voiceId, dialogue: text });
+                        }
+                    });
+    
+                    // Start playing the audio queue
+                    playAudioQueue(audioQueue);
+                }
+    
+                function playAudioQueue(audioQueue) {
+                    if (audioQueue.length === 0) return; // Stop if there's no audio to play
+
+                    const { voiceId, dialogue } = audioQueue.shift(); // Get the next audio item
+                    const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/with-timestamps`;
+                    const YOUR_XI_API_KEY = 'sk_e172fcba7165b155e9d61ef20289e0dbd5386567f659d61e'; // Replace with your actual API key
+                    const headers = {
+                        "Content-Type": "application/json",
+                        "xi-api-key": YOUR_XI_API_KEY
+                    };
+    
+                    $(`#${voiceId}`).click();
+                    const data = {
+                        "text": dialogue,
+                        "model_id": "eleven_multilingual_v2",
+                        "voice_settings": {
+                            "stability": 0.5,
+                            "similarity_boost": 0.75
+                        }
+                    };
+    
+                    fetch(url, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error encountered, status: ${response.status}, content: ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(responseDict => {
+                        const audioBase64 = responseDict.audio_base64;
+    
+                        // Decode the base64 audio and create a blob
+                        const audioBytes = atob(audioBase64);
+                        const byteNumbers = new Uint8Array(audioBytes.length);
+                        for (let i = 0; i < audioBytes.length; i++) {
+                            byteNumbers[i] = audioBytes.charCodeAt(i);
+                        }
+                        const audioBlob = new Blob([byteNumbers], { type: 'audio/mp3' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+    
+                        const audioElement = new Audio(audioUrl);
+    
+                        // Extract timestamps
+                        const endTimes = responseDict.alignment.character_end_times_seconds;
+                        const duration = endTimes[endTimes.length - 1]; // Total duration
+    
+                        // Play the audio
+                        audioElement.play();
+    
+                        // Prepare for the next audio playback
+                        audioElement.onended = () => {
+                            // Immediately start playing the next audio in the queue without delay
+                            playAudioQueue(audioQueue); // Play the next audio in the queue
+                        };
+    
+                        // If there's more audio in the queue, preload it
+                        if (audioQueue.length > 0) {
+                            const nextItem = audioQueue[0];
+                            preloadAudio(nextItem);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        playAudioQueue(audioQueue); // Continue with the next audio even if there's an error
+                    });
+                }
+    
+                function preloadAudio({ voiceId, dialogue }) {
+                    const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/with-timestamps`;
+                    const YOUR_XI_API_KEY = 'sk_49b78a3765a98539030d22d4d528e6f20e278837409f1838'; // Replace with your actual API key
+                    const headers = {
+                        "Content-Type": "application/json",
+                        "xi-api-key": YOUR_XI_API_KEY
+                    };
+    
+                    const data = {
+                        "text": dialogue,
+                        "model_id": "eleven_multilingual_v2",
+                        "voice_settings": {
+                            "stability": 0.5,
+                            "similarity_boost": 0.75
+                        }
+                    };
+    
+                    fetch(url, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(data)
+                    }).then(response => {
+                        if (!response.ok) {
+                            console.error('Error preloading audio:', response);
+                        }
+                    }).catch(error => {
+                        console.error('Error in preloading:', error);
+                    });
+                }
+            });
+        </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
