@@ -12,7 +12,7 @@ Welcome to **Bloopa**, the innovative app designed to empower children with spee
 
 ## User Videos 🎥
 - [Demo Video 1](link-to-demo-video-1) - Overview of Bloopa features
-- [User Testimonial Video](link-to-user-testimonial-video) - Hear from real users!
+- [https://github.com/daplatform/elevenlabs/blob/main/static/images/template.png)
 
 ## Prerequisites ⚙️
 Before you begin, ensure you have met the following requirements:
