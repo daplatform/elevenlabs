@@ -3,7 +3,7 @@ from flask import jsonify, request
 import subprocess
 import json
 
-API_KEY = 'AIzaSyC0VHyo19QVjBG7GhnMKZUWR_KRUVnIGKU'
+API_KEY = ''
 GEMINI_API_URL = f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}'
 
 def ask_question(data):
