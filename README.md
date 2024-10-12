@@ -66,3 +66,35 @@ class Config:
     
     # Secret key (used for security purposes)
     SECRET_KEY = ""
+
+## Top Companies in Assistive Technology (AAC)
+
+1. **Liberator**  
+   - **Overview**: Provides customizable AAC devices and software with user-friendly interfaces.  
+   - **Limitations**: Compatibility issues and steep learning curve for advanced features.
+
+2. **Zyteq**  
+   - **Overview**: High-tech AAC solutions with eye-gaze technology.  
+   - **Limitations**: High costs and requires extensive training.
+
+3. **Link Assistive Technology**  
+   - **Overview**: Offers high-tech and low-tech AAC tools.  
+   - **Limitations**: Less portable devices and limited voice customization.
+
+4. **Tobii Dynavox**  
+   - **Overview**: Eye-tracking technology for communication devices.  
+   - **Limitations**: Environmental sensitivity, expensive, complex setup.
+
+5. **Prentke Romich Company (PRC)**  
+   - **Overview**: AAC devices with symbol-based communication.  
+   - **Limitations**: Less intuitive interface compared to newer technologies.
+
+### Bloopa vs Traditional AAC
+- **Speed of Communication**: Bloopa reduces speech output delays.  
+- **Voice Customization**: Bloopa offers a wider variety of natural voices.  
+- **User-Friendliness**: Intuitive interface, easier for new users.  
+- **Modern Integration**: Seamless connection with mobile platforms and social media, often limited in other AAC systems.
+* Note : This is our independent assessment. We do not want to get into legal issues, so we have kept it to overview areas
+In summary, Bloopa's focus on speed, personalization, and modern technology makes it a strong competitor in the AAC market.
+
+
