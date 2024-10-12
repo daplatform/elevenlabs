@@ -17,6 +17,3 @@ Welcome to **Bloopa**, the innovative app designed to empower children with spee
 ## Videos 📚✨
 [![Watch the video](https://img.youtube.com/vi/MVfWJsBO7ts/hqdefault.jpg)](https://youtu.be/MVfWJsBO7ts)
 [![Watch the video](https://img.youtube.com/vi/fUZh-2TX7VY/hqdefault.jpg)](https://youtu.be/fUZh-2TX7VY)
-
-
-
