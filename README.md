@@ -32,10 +32,9 @@ Welcome to **Bloopa**, the innovative app designed to empower children with spee
 ## Steps to Install 📦  
 Follow these steps to set up **Bloopa**:
 
-### 1. Install Required Libraries  
+## Install Libraries
 To use ElevenLabs, Deepgram, and TogetherAPI, install the necessary Python libraries using `pip`. Run the following commands:
 
-```bash
 pip install elevenlabs
 pip install deepgram-sdk
 pip install togetherai
