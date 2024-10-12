@@ -9,8 +9,7 @@ Welcome to **Bloopa**, the innovative app designed to empower children with spee
 - **Speech Restoration**: Advanced speech recognition enhances communication abilities 🔊🗣️
 
 <p align="center">
-  <img src="https://github.com/your-username/bloopa/blob/main/static/images/arch-1.png" alt="Architecture 1" width="300" />
-  <img src="https://github.com/your-username/bloopa/blob/main/static/images/arch-2.png" alt="Architecture 2" width="300" />
+  <img src="https://raw.githubusercontent.com/daplatform/elevenlabs/main/static/images/arch-1.png" alt="Architecture 1" width="300" />
+  <img src="https://raw.githubusercontent.com/daplatform/elevenlabs/main/static/images/arch-2.png" alt="Architecture 2" width="300" />
 </p>
-
 
