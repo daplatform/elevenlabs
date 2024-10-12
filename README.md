@@ -21,10 +21,10 @@ Welcome to **Bloopa**, the innovative app designed to empower children with spee
 Check out these videos for a glimpse into Bloopa:
 
 ### Intro Video
-[![Intro Video](https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](https://github.com/daplatform/elevenlabs/blob/main/static/readme-videos/bloopa-1.mp4)
+[![Intro Video](static/readme-videos/bloopa-1.png)](https://github.com/daplatform/elevenlabs/blob/main/static/readme-videos/bloopa-1.mp4)
 
 ### Main Landing Page
-[![Main Landing Page](https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](https://github.com/daplatform/elevenlabs/blob/main/static/readme-videos/bloopa-2.mp4)
+[![Main Landing Page](static/readme-videos/bloopa-2.png)](https://github.com/daplatform/elevenlabs/blob/main/static/readme-videos/bloopa-2.mp4)
 
 ### Easter Egg
-[![Easter Egg](https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](https://github.com/daplatform/elevenlabs/blob/main/static/readme-videos/bloopa-3.mp4)
+[![Easter Egg](static/readme-videos/bloopa-3.png)](https://github.com/daplatform/elevenlabs/blob/main/static/readme-videos/bloopa-3.mp4)
