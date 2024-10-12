@@ -1,5 +1,5 @@
 # Bloopa 🌈🐾
-
+**it was difficult to show everything in the demo video. Hence we have created this section**
 ## Overview 📚✨
 Welcome to **Bloopa**, the innovative app designed to empower children with speech difficulties! Bloopa transforms learning and communication through interactive features that engage kids in fun and meaningful ways. 🌟 
 
