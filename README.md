@@ -8,7 +8,7 @@ Welcome to **Bloopa**, the innovative app designed to empower children with spee
 - **Visual Learning**: Avatars like mothers and Santa Claus teach abstract concepts 🌟🎅
 - **Speech Restoration**: Advanced speech recognition enhances communication abilities 🔊🗣️
 
-![Architectural Diagram](path/to/your/architectural-diagram.png) <!-- Placeholder for Architectural Diagram -->
+![Architectural Diagram]([[path/to/your/architectural-diagram.png](https://github.com/daplatform/elevenlabs/edit/main/README.md](https://github.com/daplatform/elevenlabs/blob/main/static/images/template.png))) <!-- Placeholder for Architectural Diagram -->
 
 ## User Videos 🎥
 - [Demo Video 1](link-to-demo-video-1) - Overview of Bloopa features
