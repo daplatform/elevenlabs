@@ -37,7 +37,7 @@ Finally, Bloopa’s scalable, AI-driven architecture leverages advanced NLP and 
   <img src="https://raw.githubusercontent.com/daplatform/elevenlabs/main/static/images/arch-2.png" alt="Architecture 2" width="300" />
 </p>  
 
-## Videos 📚✨  
+## Hands on Demo 📚✨  
 <a href="https://youtu.be/MVfWJsBO7ts">
   <img src="https://img.youtube.com/vi/MVfWJsBO7ts/hqdefault.jpg" alt="Video 1" width="150" />
 </a>
